@@ -16,7 +16,7 @@ pagamentos
 
 Essa organização facilitará a manutenção e a escalabilidade da aplicação.
 
-## Etapa 5 Preparação do Ambiente
+## Etapa 5 Preparação do Ambiente 
 
 Foram realizadas as configurações iniciais do BD criado ontem:
 
@@ -35,10 +35,4 @@ Repository Pattern;
 Injeção de Dependência;
 Swagger/OpenAPI.
 
-
-Dificuldades Encontradas
-
-Próximas(Etapa 6) etapa, para amanhã
-
-
-implementar a Feature de Clientes;
+Próximas(Etapa 6) etapa, para amanhã implementar a Feature de Clientes;
