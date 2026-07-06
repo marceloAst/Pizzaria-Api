@@ -4,11 +4,10 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const pool = new Pool({
-    host: process.env.DB_HOST,
-    port: Number(process.env.DB_PORT),
-    database: process.env.DB_NAME,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
 
 pool.connect()
@@ -17,8 +16,8 @@ pool.connect()
         client.release();
     })
     .catch((err) => {
-        console.error("Erro ao conectar com o banco de dados:");
-        console.error(err.message);
+        console.error("Erro ao conectar com o banco:");
+        console.error(err);
     });
 
 export default pool;
