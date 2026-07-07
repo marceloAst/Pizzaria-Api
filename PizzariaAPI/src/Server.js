@@ -1,43 +1,40 @@
 import Fastify from "fastify";
 import dotenv from "dotenv";
 
-import pool from "./Database/Pool.js";
+import "./Database/Pool.js";
+
+import clienteRoutes from "./Features/Clientes/ClienteRoutes.js";
+import errorHandler from "./Common/Errors/ErrorHandler.js";
 
 dotenv.config();
 
 const app = Fastify({
-    logger: true,
+  logger: true,
 });
 
-app.get("/", async (request, reply) => {
-    try {
-        const resultado = await pool.query("SELECT NOW()");
+app.setErrorHandler(errorHandler);
 
-        return {
-            conectado: true,
-            servidor: resultado.rows[0]
-        };
-    } catch (erro) {
-        return reply.status(500).send({
-            conectado: false,
-            erro: erro.message
-        });
-    }
+app.get("/", async () => {
+  return {
+    message: "Pizzaria API funcionando!",
+  };
 });
 
 const PORT = process.env.PORT || 6767;
 
 const start = async () => {
-    try {
-        await app.listen({
-            port: PORT
-        });
+  try {
+    await app.register(clienteRoutes);
 
-        console.log(`Servidor rodando na porta ${PORT}`);
-    } catch (erro) {
-        app.log.error(erro);
-        process.exit(1);
-    }
+    await app.listen({
+      port: PORT,
+    });
+
+    console.log(`Servidor rodando na porta ${PORT}`);
+  } catch (erro) {
+    app.log.error(erro);
+    process.exit(1);
+  }
 };
 
 start();

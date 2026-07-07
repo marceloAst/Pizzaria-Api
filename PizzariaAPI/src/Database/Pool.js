@@ -10,10 +10,10 @@ const pool = new Pool({
     }
 });
 
-pool.connect()
-    .then((client) => {
+// Teste de conexão
+pool.query("SELECT NOW()")
+    .then(() => {
         console.log("Banco conectado com sucesso!");
-        client.release();
     })
     .catch((err) => {
         console.error("Erro ao conectar com o banco:");
