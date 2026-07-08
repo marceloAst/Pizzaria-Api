@@ -1,0 +1,546 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Pizzaria API",
+    "description": "API para gerenciamento de uma pizzaria com atendimento presencial.",
+    "version": "1.0.0"
+  },
+  "tags": [
+    { "name": "Clientes" },
+    { "name": "Categorias" },
+    { "name": "Produtos" },
+    { "name": "Mesas" },
+    { "name": "Pedidos" },
+    { "name": "Pagamentos" }
+  ],
+  "paths": {
+    "/clientes": {
+      "post": {
+        "tags": ["Clientes"],
+        "summary": "Criar cliente",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nome", "telefone", "email"],
+                "properties": {
+                  "nome": { "type": "string" },
+                  "telefone": { "type": "string" },
+                  "email": { "type": "string", "format": "email" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Cliente criado" },
+          "409": { "description": "E-mail já cadastrado" }
+        }
+      },
+      "get": {
+        "tags": ["Clientes"],
+        "summary": "Listar clientes",
+        "responses": {
+          "200": { "description": "Lista de clientes" }
+        }
+      }
+    },
+    "/clientes/{id}": {
+      "get": {
+        "tags": ["Clientes"],
+        "summary": "Buscar cliente por ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Cliente encontrado" },
+          "404": { "description": "Cliente não encontrado" }
+        }
+      },
+      "patch": {
+        "tags": ["Clientes"],
+        "summary": "Atualizar cliente",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nome", "telefone", "email"],
+                "properties": {
+                  "nome": { "type": "string" },
+                  "telefone": { "type": "string" },
+                  "email": { "type": "string", "format": "email" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Cliente atualizado" },
+          "404": { "description": "Cliente não encontrado" },
+          "409": { "description": "E-mail já cadastrado" }
+        }
+      },
+      "delete": {
+        "tags": ["Clientes"],
+        "summary": "Excluir cliente",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "204": { "description": "Cliente excluído" },
+          "404": { "description": "Cliente não encontrado" }
+        }
+      }
+    },
+    "/categorias": {
+      "post": {
+        "tags": ["Categorias"],
+        "summary": "Criar categoria",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nome"],
+                "properties": {
+                  "nome": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Categoria criada" },
+          "409": { "description": "Nome já cadastrado" }
+        }
+      },
+      "get": {
+        "tags": ["Categorias"],
+        "summary": "Listar categorias",
+        "responses": {
+          "200": { "description": "Lista de categorias" }
+        }
+      }
+    },
+    "/categorias/{id}": {
+      "get": {
+        "tags": ["Categorias"],
+        "summary": "Buscar categoria por ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Categoria encontrada" },
+          "404": { "description": "Categoria não encontrada" }
+        }
+      },
+      "patch": {
+        "tags": ["Categorias"],
+        "summary": "Atualizar categoria",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nome"],
+                "properties": {
+                  "nome": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Categoria atualizada" },
+          "404": { "description": "Categoria não encontrada" },
+          "409": { "description": "Nome já cadastrado" }
+        }
+      },
+      "delete": {
+        "tags": ["Categorias"],
+        "summary": "Excluir categoria",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "204": { "description": "Categoria excluída" },
+          "400": { "description": "Categoria possui produtos vinculados" },
+          "404": { "description": "Categoria não encontrada" }
+        }
+      }
+    },
+    "/produtos": {
+      "post": {
+        "tags": ["Produtos"],
+        "summary": "Criar produto",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nome", "preco", "categoriaId"],
+                "properties": {
+                  "nome": { "type": "string" },
+                  "descricao": { "type": "string" },
+                  "preco": { "type": "number" },
+                  "categoriaId": { "type": "integer" },
+                  "disponivel": { "type": "boolean" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Produto criado" },
+          "404": { "description": "Categoria não encontrada" }
+        }
+      },
+      "get": {
+        "tags": ["Produtos"],
+        "summary": "Listar produtos",
+        "responses": {
+          "200": { "description": "Lista de produtos" }
+        }
+      }
+    },
+    "/produtos/{id}": {
+      "get": {
+        "tags": ["Produtos"],
+        "summary": "Buscar produto por ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Produto encontrado" },
+          "404": { "description": "Produto não encontrado" }
+        }
+      },
+      "patch": {
+        "tags": ["Produtos"],
+        "summary": "Atualizar produto",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": { "type": "string" },
+                  "descricao": { "type": "string" },
+                  "preco": { "type": "number" },
+                  "categoriaId": { "type": "integer" },
+                  "disponivel": { "type": "boolean" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Produto atualizado" },
+          "404": { "description": "Produto ou categoria não encontrada" }
+        }
+      },
+      "delete": {
+        "tags": ["Produtos"],
+        "summary": "Excluir produto",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "204": { "description": "Produto excluído" },
+          "404": { "description": "Produto não encontrado" }
+        }
+      }
+    },
+    "/mesas": {
+      "post": {
+        "tags": ["Mesas"],
+        "summary": "Cadastrar mesa",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["numero", "capacidade"],
+                "properties": {
+                  "numero": { "type": "integer" },
+                  "capacidade": { "type": "integer" },
+                  "status": { "type": "string", "enum": ["Livre", "Ocupada", "Reservada"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Mesa cadastrada" },
+          "409": { "description": "Número já cadastrado" }
+        }
+      },
+      "get": {
+        "tags": ["Mesas"],
+        "summary": "Listar mesas",
+        "responses": {
+          "200": { "description": "Lista de mesas" }
+        }
+      }
+    },
+    "/mesas/{id}": {
+      "get": {
+        "tags": ["Mesas"],
+        "summary": "Buscar mesa por ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Mesa encontrada" },
+          "404": { "description": "Mesa não encontrada" }
+        }
+      },
+      "patch": {
+        "tags": ["Mesas"],
+        "summary": "Atualizar mesa",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "numero": { "type": "integer" },
+                  "capacidade": { "type": "integer" },
+                  "status": { "type": "string", "enum": ["Livre", "Ocupada", "Reservada"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Mesa atualizada" },
+          "404": { "description": "Mesa não encontrada" }
+        }
+      },
+      "delete": {
+        "tags": ["Mesas"],
+        "summary": "Remover mesa",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "204": { "description": "Mesa removida" },
+          "400": { "description": "Mesa possui pedidos vinculados" },
+          "404": { "description": "Mesa não encontrada" }
+        }
+      }
+    },
+    "/pedidos": {
+      "post": {
+        "tags": ["Pedidos"],
+        "summary": "Criar pedido",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["clienteId", "mesaId", "itens"],
+                "properties": {
+                  "clienteId": { "type": "integer" },
+                  "mesaId": { "type": "integer" },
+                  "itens": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["produtoId", "quantidade"],
+                      "properties": {
+                        "produtoId": { "type": "integer" },
+                        "quantidade": { "type": "integer" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Pedido criado" },
+          "400": { "description": "Mesa ocupada ou item inválido" },
+          "404": { "description": "Cliente, mesa ou produto não encontrado" }
+        }
+      },
+      "get": {
+        "tags": ["Pedidos"],
+        "summary": "Listar pedidos",
+        "responses": {
+          "200": { "description": "Lista de pedidos" }
+        }
+      }
+    },
+    "/pedidos/{id}": {
+      "get": {
+        "tags": ["Pedidos"],
+        "summary": "Buscar pedido por ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Pedido com detalhes e itens" },
+          "404": { "description": "Pedido não encontrado" }
+        }
+      },
+      "delete": {
+        "tags": ["Pedidos"],
+        "summary": "Remover pedido",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "204": { "description": "Pedido removido" },
+          "400": { "description": "Pedido não está aberto ou possui pagamento" },
+          "404": { "description": "Pedido não encontrado" }
+        }
+      }
+    },
+    "/pedidos/{id}/status": {
+      "patch": {
+        "tags": ["Pedidos"],
+        "summary": "Atualizar status do pedido",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["status"],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": ["Aberto", "Em preparo", "Finalizado", "Cancelado"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Status atualizado" },
+          "400": { "description": "Transição de status inválida" },
+          "404": { "description": "Pedido não encontrado" }
+        }
+      }
+    },
+    "/pagamentos": {
+      "post": {
+        "tags": ["Pagamentos"],
+        "summary": "Registrar pagamento",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["pedidoId", "formaPagamento", "valorPago"],
+                "properties": {
+                  "pedidoId": { "type": "integer" },
+                  "formaPagamento": {
+                    "type": "string",
+                    "enum": ["Dinheiro", "Pix", "Crédito", "Débito"]
+                  },
+                  "valorPago": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Pagamento registrado" },
+          "400": { "description": "Pedido não finalizado ou valor incorreto" },
+          "404": { "description": "Pedido não encontrado" },
+          "409": { "description": "Pedido já possui pagamento" }
+        }
+      },
+      "get": {
+        "tags": ["Pagamentos"],
+        "summary": "Listar pagamentos",
+        "responses": {
+          "200": { "description": "Lista de pagamentos" }
+        }
+      }
+    },
+    "/pagamentos/{id}": {
+      "get": {
+        "tags": ["Pagamentos"],
+        "summary": "Buscar pagamento por ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Pagamento encontrado" },
+          "404": { "description": "Pagamento não encontrado" }
+        }
+      },
+      "patch": {
+        "tags": ["Pagamentos"],
+        "summary": "Atualizar pagamento",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "formaPagamento": {
+                    "type": "string",
+                    "enum": ["Dinheiro", "Pix", "Crédito", "Débito"]
+                  },
+                  "valorPago": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Pagamento atualizado" },
+          "404": { "description": "Pagamento não encontrado" }
+        }
+      },
+      "delete": {
+        "tags": ["Pagamentos"],
+        "summary": "Remover pagamento",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "204": { "description": "Pagamento removido" },
+          "404": { "description": "Pagamento não encontrado" }
+        }
+      }
+    }
+  }
+}
