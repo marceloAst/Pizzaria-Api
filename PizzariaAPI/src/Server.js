@@ -18,75 +18,70 @@ import errorHandler from "./Common/Errors/ErrorHandler.js";
 dotenv.config();
 
 const app = Fastify({
-    logger: true,
-    ajv: {
-        customOptions: {
-            strict: false
-        }
-    }
+  logger: true,
+  ajv: {
+    customOptions: {
+      strict: false,
+    },
+  },
 });
 
 app.setErrorHandler(errorHandler);
 
 app.get("/", async () => {
-    return {
-        message: "Pizzaria API funcionando! Acesse /docs para ver a documentação Swagger."
-    };
+  return {
+    message: "API da pizzaria funcionando. Veja a documentação em /docs.",
+  };
 });
 
 const PORT = process.env.PORT || 6767;
 
 const start = async () => {
+  try {
+    await app.register(swagger, {
+      openapi: {
+        openapi: "3.0.0",
+        info: {
+          title: "Pizzaria API",
+          description:
+            "API simples para controlar clientes, produtos, mesas, pedidos e pagamentos de uma pizzaria.",
+          version: "1.0.0",
+        },
+        tags: [
+          { name: "Clientes" },
+          { name: "PerfilCliente" },
+          { name: "Categorias" },
+          { name: "Produtos" },
+          { name: "Mesas" },
+          { name: "Pedidos" },
+          { name: "Pagamentos" },
+        ],
+      },
+    });
 
-    try {
+    await app.register(swaggerUi, {
+      routePrefix: "/docs",
+    });
 
-        await app.register(swagger, {
-            openapi: {
-                openapi: "3.0.0",
-                info: {
-                    title: "Pizzaria API",
-                    description: "API RESTful para gerenciamento de uma pizzaria com atendimento presencial (clientes, produtos, mesas, pedidos e pagamentos).",
-                    version: "1.0.0"
-                },
-                tags: [
-                    { name: "Clientes" },
-                    { name: "PerfilCliente" },
-                    { name: "Categorias" },
-                    { name: "Produtos" },
-                    { name: "Mesas" },
-                    { name: "Pedidos" },
-                    { name: "Pagamentos" }
-                ]
-            }
-        });
+    await app.register(clienteRoutes);
+    await app.register(perfilClienteRoutes);
+    await app.register(produtoRoutes);
+    await app.register(categoriaRoutes);
+    await app.register(mesaRoutes);
+    await app.register(pedidoRoutes);
+    await app.register(pagamentoRoutes);
 
-        await app.register(swaggerUi, {
-            routePrefix: "/docs"
-        });
+    await app.listen({
+      port: PORT,
+      host: "0.0.0.0",
+    });
 
-        await app.register(clienteRoutes);
-        await app.register(perfilClienteRoutes);
-        await app.register(produtoRoutes);
-        await app.register(categoriaRoutes);
-        await app.register(mesaRoutes);
-        await app.register(pedidoRoutes);
-        await app.register(pagamentoRoutes);
-
-        await app.listen({
-            port: PORT,
-            host: "0.0.0.0"
-        });
-
-        console.log(`Servidor rodando na porta ${PORT}`);
-        console.log(`Documentação Swagger disponível em http://localhost:${PORT}/docs`);
-
-    } catch (erro) {
-
-        app.log.error(erro);
-        process.exit(1);
-
-    }
-
+    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`Documentação disponível em http://localhost:${PORT}/docs`);
+  } catch (erro) {
+    app.log.error(erro);
+    process.exit(1);
+  }
 };
 
 start();

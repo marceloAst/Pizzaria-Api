@@ -1,65 +1,102 @@
 import AppError from "../../Common/Errors/AppError.js";
 
 class ClienteService {
+  constructor(clienteRepository) {
+    this.clienteRepository = clienteRepository;
+  }
 
-    constructor(clienteRepository) {
-        this.clienteRepository = clienteRepository;
+  validarDados(cliente) {
+    const nome = cliente?.nome?.toString().trim();
+    const telefone = cliente?.telefone?.toString().trim();
+    const email = cliente?.email?.toString().trim();
+
+    if (!nome || !telefone || !email) {
+      throw new AppError("Nome, telefone e e-mail são obrigatórios.", 400);
     }
 
-    async create(cliente) {
+    return {
+      nome,
+      telefone,
+      email,
+    };
+  }
 
-        const clienteExistente = await this.clienteRepository.findByEmail(cliente.email);
+  async create(cliente) {
+    const dadosCliente = this.validarDados(cliente);
 
-        if (clienteExistente) {
-            throw new AppError("Já existe um cliente com este e-mail.", 409);
-        }
+    const clienteExistente = await this.clienteRepository.findByEmail(
+      dadosCliente.email,
+    );
 
-        return await this.clienteRepository.create(cliente);
+    if (clienteExistente) {
+      throw new AppError("Já existe um cliente com este e-mail.", 409);
     }
 
-    async findAll() {
-        return await this.clienteRepository.findAll();
+    return await this.clienteRepository.create(dadosCliente);
+  }
+
+  async findAll() {
+    return await this.clienteRepository.findAll();
+  }
+
+  async findById(id) {
+    const cliente = await this.clienteRepository.findById(id);
+
+    if (!cliente) {
+      throw new AppError("Cliente não encontrado.", 404);
     }
 
-    async findById(id) {
+    return cliente;
+  }
 
-        const cliente = await this.clienteRepository.findById(id);
+  async update(id, cliente) {
+    const clienteExistente = await this.clienteRepository.findById(id);
 
-        if (!cliente) {
-            throw new AppError("Cliente não encontrado.", 404);
-        }
-
-        return cliente;
+    if (!clienteExistente) {
+      throw new AppError("Cliente não encontrado.", 404);
     }
 
-    async update(id, cliente) {
+    const campos = Object.fromEntries(
+      Object.entries(cliente || {}).filter(
+        ([, value]) => value !== undefined && value !== null && value !== "",
+      ),
+    );
 
-        const clienteExistente = await this.clienteRepository.findById(id);
-
-        if (!clienteExistente) {
-            throw new AppError("Cliente não encontrado.", 404);
-        }
-
-        const emailExistente = await this.clienteRepository.findByEmail(cliente.email);
-
-        if (emailExistente && emailExistente.id !== Number(id)) {
-            throw new AppError("Já existe um cliente com este e-mail.", 409);
-        }
-
-        return await this.clienteRepository.update(id, cliente);
+    if (Object.keys(campos).length === 0) {
+      throw new AppError("Informe pelo menos um campo para atualizar.", 400);
     }
 
-    async delete(id) {
+    const dadosCliente = {
+      ...clienteExistente,
+      ...campos,
+    };
 
-        const cliente = await this.clienteRepository.findById(id);
+    const dadosValidos = this.validarDados({
+      nome: dadosCliente.nome,
+      telefone: dadosCliente.telefone,
+      email: dadosCliente.email,
+    });
 
-        if (!cliente) {
-            throw new AppError("Cliente não encontrado.", 404);
-        }
+    const emailExistente = await this.clienteRepository.findByEmail(
+      dadosValidos.email,
+    );
 
-        await this.clienteRepository.delete(id);
+    if (emailExistente && emailExistente.id !== Number(id)) {
+      throw new AppError("Já existe um cliente com este e-mail.", 409);
     }
 
+    return await this.clienteRepository.update(id, dadosValidos);
+  }
+
+  async delete(id) {
+    const cliente = await this.clienteRepository.findById(id);
+
+    if (!cliente) {
+      throw new AppError("Cliente não encontrado.", 404);
+    }
+
+    await this.clienteRepository.delete(id);
+  }
 }
 
 export default ClienteService;
