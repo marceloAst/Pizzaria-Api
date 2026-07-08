@@ -185,11 +185,4 @@ A API utiliza uma classe customizada `AppError` com `statusCode` e `message`. Os
 ```
 
 ## Documentação (Swagger)
-
-Com o servidor rodando, o JSON da especificação OpenAPI está disponível em:
-
-```
-http://localhost:3333/documentation/json
-```
-
-Para visualizar no VS Code, instale a extensão **Swagger Viewer** ou **OpenAPI Preview**, copie o JSON da rota acima e visualize dentro do próprio VS Code.
+Para visualizar a documentação Swagger no VS Code, instale a extensão **Swagger Viewer**, clique botão direito no arquivo Swagger.json e depois clique Preview Swagger para visualizar a nossa documentação.
