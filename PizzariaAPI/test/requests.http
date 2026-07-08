@@ -1,0 +1,247 @@
+@baseUrl = http://localhost:3333
+
+### GET - Health Check
+GET {{baseUrl}}/
+
+
+### Ctegorias
+
+### POST - Criar categoria
+POST {{baseUrl}}/categorias
+Content-Type: application/json
+
+{
+  "nome": "Pizzas Salgadas"
+}
+
+### POST - Criar outra categoria
+POST {{baseUrl}}/categorias
+Content-Type: application/json
+
+{
+  "nome": "Bebidas"
+}
+
+### GET - Listar categorias
+GET {{baseUrl}}/categorias
+
+### GET - Buscar categoria por ID
+GET {{baseUrl}}/categorias/1
+
+### PATCH - Atualizar categoria
+PATCH {{baseUrl}}/categorias/1
+Content-Type: application/json
+
+{
+  "nome": "Pizzas Especiais"
+}
+
+### DELETE - Excluir categoria
+DELETE {{baseUrl}}/categorias/2
+
+
+### Clientes
+
+
+### POST - Criar cliente
+POST {{baseUrl}}/clientes
+Content-Type: application/json
+
+{
+  "nome": "João Silva",
+  "telefone": "(11) 99999-8888",
+  "email": "joao@email.com"
+}
+
+### POST - Criar outro cliente
+POST {{baseUrl}}/clientes
+Content-Type: application/json
+
+{
+  "nome": "Maria Souza",
+  "telefone": "(11) 97777-6666",
+  "email": "maria@email.com"
+}
+
+### GET - Listar clientes
+GET {{baseUrl}}/clientes
+
+### GET - Buscar cliente por ID
+GET {{baseUrl}}/clientes/1
+
+### PATCH - Atualizar cliente
+PATCH {{baseUrl}}/clientes/1
+Content-Type: application/json
+
+{
+  "nome": "João Santos Silva",
+  "telefone": "(11) 99999-8888",
+  "email": "joao.santos@email.com"
+}
+
+### DELETE - Excluir cliente
+DELETE {{baseUrl}}/clientes/2
+
+
+### Produtos
+
+### POST - Criar produto
+POST {{baseUrl}}/produtos
+Content-Type: application/json
+
+{
+  "nome": "Pizza Margherita",
+  "descricao": "Molho de tomate, muçarela e manjericão",
+  "preco": 39.90,
+  "categoriaId": 1,
+  "disponivel": true
+}
+
+### POST - Criar outro produto
+POST {{baseUrl}}/produtos
+Content-Type: application/json
+
+{
+  "nome": "Coca-Cola 2L",
+  "descricao": "Refrigerante de cola 2 litros",
+  "preco": 12.00,
+  "categoriaId": 2,
+  "disponivel": true
+}
+
+### GET - Listar produtos
+GET {{baseUrl}}/produtos
+
+### GET - Buscar produto por ID
+GET {{baseUrl}}/produtos/1
+
+### PATCH - Atualizar produto
+PATCH {{baseUrl}}/produtos/1
+Content-Type: application/json
+
+{
+  "preco": 44.90,
+  "disponivel": true
+}
+
+### DELETE - Excluir produto
+DELETE {{baseUrl}}/produtos/2
+
+
+### Mesas
+
+### POST - Criar mesa
+POST {{baseUrl}}/mesas
+Content-Type: application/json
+
+{
+  "numero": 1,
+  "capacidade": 4
+}
+
+### POST - Criar outra mesa
+POST {{baseUrl}}/mesas
+Content-Type: application/json
+
+{
+  "numero": 2,
+  "capacidade": 6
+}
+
+### POST - Criar mesa reservada
+POST {{baseUrl}}/mesas
+Content-Type: application/json
+
+{
+  "numero": 3,
+  "capacidade": 2,
+  "status": "Reservada"
+}
+
+### GET - Listar mesas
+GET {{baseUrl}}/mesas
+
+### GET - Buscar mesa por ID
+GET {{baseUrl}}/mesas/1
+
+### PATCH - Atualizar mesa
+PATCH {{baseUrl}}/mesas/1
+Content-Type: application/json
+
+{
+  "status": "Ocupada"
+}
+
+### DELETE - Excluir mesa
+DELETE {{baseUrl}}/mesas/3
+
+
+### Pedidos
+
+### POST - Criar pedido
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+
+{
+  "clienteId": 1,
+  "mesaId": 1,
+  "itens": [
+    { "produtoId": 1, "quantidade": 2 },
+    { "produtoId": 2, "quantidade": 1 }
+  ]
+}
+
+### GET - Listar pedidos
+GET {{baseUrl}}/pedidos
+
+### GET - Buscar pedido por ID (completo)
+GET {{baseUrl}}/pedidos/1
+
+### PATCH - Atualizar status do pedido
+PATCH {{baseUrl}}/pedidos/1/status
+Content-Type: application/json
+
+{
+  "status": "Em preparo"
+}
+
+### PATCH - Finalizar pedido
+PATCH {{baseUrl}}/pedidos/1/status
+Content-Type: application/json
+
+{
+  "status": "Finalizado"
+}
+
+### DELETE - Excluir pedido (apenas se "Aberto")
+DELETE {{baseUrl}}/pedidos/1
+
+
+### Pagamentos
+
+### POST - Registrar pagamento
+POST {{baseUrl}}/pagamentos
+Content-Type: application/json
+
+{
+  "pedidoId": 1,
+  "formaPagamento": "Pix",
+  "valorPago": 91.80
+}
+
+### GET - Listar pagamentos
+GET {{baseUrl}}/pagamentos
+
+### GET - Buscar pagamento por ID
+GET {{baseUrl}}/pagamentos/1
+
+### PATCH - Atualizar pagamento
+PATCH {{baseUrl}}/pagamentos/1
+Content-Type: application/json
+
+{
+  "valorPago": 91.80
+}
+
+### DELETE - Excluir pagamento
+DELETE {{baseUrl}}/pagamentos/1
