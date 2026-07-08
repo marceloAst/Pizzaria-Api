@@ -5,6 +5,7 @@ import "./Database/Pool.js";
 
 import clienteRoutes from "./Features/Clientes/ClienteRoutes.js";
 import produtoRoutes from "./Features/Produtos/ProdutoRoutes.js";
+import categoriaRoutes from "./Features/Categorias/CategoriaRoutes.js";
 
 import errorHandler from "./Common/Errors/ErrorHandler.js";
 
@@ -30,6 +31,7 @@ const start = async () => {
 
         await app.register(clienteRoutes);
         await app.register(produtoRoutes);
+        await app.register(categoriaRoutes);
 
         await app.listen({
             port: PORT
